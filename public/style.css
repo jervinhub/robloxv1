@@ -1084,3 +1084,23 @@ flex-shrink:0;
 .limited-name{font-size:22px!important}
 .limited-robux{font-size:30px!important}
 .limited-bottom{padding:14px 18px!important}
+
+.limited-creator{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:13px;
+    color:#bdbdbd;
+    margin-top:4px;
+}
+
+.verified-badge{
+    display:flex;
+    align-items:center;
+}
+
+.verified-icon{
+    width:14px;
+    height:14px;
+    flex-shrink:0;
+}
