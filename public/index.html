@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- TOP NOTIFICATION BANNER -->
+<div id="topNotification" class="top-notification hidden">
+  <div class="notif-inner">
+    <img src="assets/robux-icon.png" class="notif-robux-icon" alt="R$" onerror="this.style.display='none'" />
+    <span id="notifText">You sent <span id="notifAmount">0</span> Robux to <span id="notifRecipient">@user</span></span>
+    <button class="notif-close" onclick="closeNotification()">✕</button>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay hidden">
+  <div class="settings-modal">
+    <h2>Customize Profile</h2>
+    <div class="settings-field">
+      <label>Your Username</label>
+      <input type="text" id="settingsUsername" placeholder="Eisso" maxlength="20" />
+    </div>
+    <div class="settings-field">
+      <label>Display Name</label>
+      <input type="text" id="settingsDisplayName" placeholder="Eisso" maxlength="30" />
+    </div>
+    <div class="settings-field">
+      <label>Robux Balance</label>
+      <input type="number" id="settingsRobux" placeholder="195201263" min="0" />
+    </div>
+    <div class="settings-field">
+      <label>Profile Avatar URL (optional)</label>
+      <input type="text" id="settingsAvatarUrl" placeholder="https://..." />
+    </div>
+    <div class="settings-field">
+      <label>Banner Image URL (optional)</label>
+      <input type="text" id="settingsBannerUrl" placeholder="https://..." />
+    </div>
+    <div class="settings-actions">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEND ROBUX MODAL -->
+<div id="sendModal" class="modal-overlay hidden">
+  <div class="send-modal">
+    <!-- Header -->
+    <div class="send-header">
+      <div class="send-title-row">
+        <img src="assets/roblox-plus-icon.png" class="send-robux-icon" alt="R$" onerror="this.style.display='none'" />
+        <span class="send-title">Send Robux</span>
+      </div>
+      <div class="send-balance-row">
+        <img src="assets/robux-icon.png" class="send-robux-icon-sm" alt="R$" onerror="this.style.display='none'" />
+        <span id="sendModalBalance">195,201,263</span>
+        <button class="send-close" onclick="closeSendModal()">✕</button>
+      </div>
+    </div>
+
+    <!-- STEP 1: Search -->
+    <div id="sendStep1" class="send-step">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search by username" oninput="onSearchInput(this.value)" autocomplete="off" />
+      </div>
+      <div id="searchHint" class="search-hint">Type at least 3 characters to search</div>
+      <div id="searchResults" class="search-results hidden"></div>
+    </div>
+
+    <!-- STEP 2: Choose Amount -->
+    <div id="sendStep2" class="send-step hidden">
+      <div class="recipient-profile">
+        <div class="recipient-avatar-wrap">
+          <img id="recipientAvatar" src="" alt="" class="recipient-avatar" />
+          <div id="recipientAvatarFallback" class="avatar-fallback hidden">?</div>
+        </div>
+        <div class="recipient-name" id="recipientDisplayName">onblokgodgodneverdie</div>
+        <div class="recipient-username" id="recipientUsername">@Onblok1</div>
+      </div>
+      <div class="amount-display" id="amountDisplayRow">
+        <img src="assets/robux-icon.png" class="amount-robux-icon" alt="R$" onerror="this.style.display='none'" />
+        <span id="amountDisplay">200</span>
+        <button class="edit-amount-btn" onclick="focusCustomAmount()" title="Edit amount">✎</button>
+      </div>
+      <input type="number" id="customAmountInput" class="custom-amount-input hidden" min="1" max="999999999" placeholder="Enter amount" oninput="onCustomAmount(this.value)" onblur="blurCustomAmount()" />
+      <div class="quick-amounts">
+        <button class="quick-btn" data-amount="25" onclick="selectAmount(25)">
+          <img src="assets/robux-icon.png" class="qbtn-icon" alt="R$" onerror="this.style.display='none'" /> 25
+        </button>
+        <button class="quick-btn" data-amount="50" onclick="selectAmount(50)">
+          <img src="assets/robux-icon.png" class="qbtn-icon" alt="R$" onerror="this.style.display='none'" /> 50
+        </button>
+        <button class="quick-btn" data-amount="100" onclick="selectAmount(100)">
+          <img src="assets/robux-icon.png" class="qbtn-icon" alt="R$" onerror="this.style.display='none'" /> 100
+        </button>
+        <button class="quick-btn active" data-amount="200" onclick="selectAmount(200)">
+          <img src="assets/robux-icon.png" class="qbtn-icon" alt="R$" onerror="this.style.display='none'" /> 200
+        </button>
+      </div>
+      <button class="btn-next" onclick="goToStep3()">Next</button>
+      <p class="no-fees">Robux are sent within 3 Days with no fees</p>
+    </div>
+
+    
+<div id="sendStepConfirm" class="send-step hidden">
+<div class="confirm-card">
+<div class="recipient-profile">
+<div class="recipient-avatar-wrap"><img id="confirmAvatar" class="recipient-avatar"><div id="confirmAvatarFallback" class="avatar-fallback hidden">?</div></div>
+<div class="recipient-name" id="confirmDisplayName"></div>
+<div class="recipient-username" id="confirmUsername"></div>
+
+<div class="confirm-meta-row">
+<div class="confirm-meta-item">
+<img src="/assets/Connection.png" class="confirm-meta-icon" alt="Mutuals">
+<span>0 Mutual Connections</span>
+</div>
+<div class="confirm-meta-item">
+<img src="/assets/Joined.png" class="confirm-meta-icon" alt="Joined">
+<span>Joined in <span id="confirmJoinedYear">----</span></span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="confirm-amount-box">
+<span id="confirmAmount">200</span>
+</div>
+
+<div class="confirm-actions">
+<button class="btn-next" style="flex:1" onclick="proceedSend()">Send</button>
+<button class="btn-back" style="flex:1;margin-top:0" onclick="goToStep2()">Edit</button>
+</div>
+
+<p class="confirm-warning">You need an age check or parental consent to send Robux. Once you send, you cannot cancel.</p>
+</div>
+
+<!-- STEP 3: Sending / Loading -->
+    <div id="sendStep3" class="send-step hidden">
+      <div class="sending-loader">
+        <div class="spinner"></div>
+        <div class="sending-title">Sending Robux...</div>
+        <div class="sending-sub">Please wait</div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Success -->
+    <div id="sendStep4" class="send-step hidden">
+      <div class="success-wrap">
+        <div class="success-check">&#10003;</div>
+        <div class="success-title">Robux Sent!</div>
+        <div class="success-sub" id="successText">You sent <strong>200 Robux</strong> to @Onblok1</div>
+        <button class="btn-done" onclick="closeSendModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR + MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="topnav-left">
+      <a href="#" class="roblox-logo">
+        <svg viewBox="0 0 90 28" width="90" height="28" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <text y="22" font-family="'Arial Black', sans-serif" font-size="22" font-weight="900" letter-spacing="-1" fill="white">ROBLOX</text>
+        </svg>
+      </a>
+      <a href="#" class="nav-link">Charts</a>
+      <a href="#" class="nav-link">Marketplace</a>
+      <a href="#" class="nav-link">Create</a>
+      <a href="#" class="nav-link">Robux</a>
+    </div>
+    <div class="topnav-center">
+      <div class="search-wrap">
+        <svg class="search-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="Search" class="topnav-search" />
+      </div>
+    </div>
+    <div class="topnav-right">
+      <a href="#" class="nav-user">
+        <img id="topNavAvatar" src="" class="topnav-avatar" alt="" onerror="this.style.display='none'" />
+        <span id="topNavUsername">Sono</span>
+      </a>
+      <button class="nav-icon-btn" title="Notifications" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span class="nav-badge">61</span>
+      </button>
+      <button class="nav-icon-btn roblox-plus-btn" title="Roblox+">
+        <img src="assets/robux-icon.png" alt="R+" class="rplus-icon" onerror="this.style.display='none'" />
+      </button>
+<button class="nav-icon-btn settings-btn" onclick="openSettings()" title="Settings">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <img id="sidebarAvatar" src="" class="sidebar-avatar" alt="" onerror="this.style.display='none'" />
+      <span id="sidebarUsername">Sono</span>
+      <img src="assets/roblox-plus-icon.png" class="send-robux-icon" alt="R$" onerror="this.style.display='none'" />
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Home
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Roblox Plus
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="sidebar-badge">53</span>
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Friends
+        <span class="sidebar-badge">444</span>
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Avatar
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        Inventory
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Trade
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Communities
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Blog
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Official Store
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Buy Gift Cards
+      </a>
+    </nav>
+  
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <!-- BANNER -->
+    <div class="banner-wrap">
+      <img id="bannerImage" src="" class="banner-img hidden" alt="Banner" />
+      <div id="bannerDefault" class="banner-default">
+        <div class="banner-grid-bg"></div>
+        <div class="banner-inner">
+          <div class="banner-text">
+            <h1>Enjoy up to 25%<br/>more Robux</h1>
+          </div>
+          <div class="banner-actions">
+            <div class="banner-robux-display">
+              <img src="assets/robux-icon.png" class="nav-robux-icon" alt="R$" onerror="this.style.display='none'" />
+              <span id="navRobuxBalance">0</span>
+            </div>
+            <button class="banner-send-btn" onclick="openSendModal()">
+              <img src="assets/robloxsendbutton.png" class="send-btn-img" alt="" onerror="this.style.display='none'" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" class="send-btn-arrow">
+                <line x1="12" y1="19" x2="12" y2="5"/>
+                <polyline points="5 12 12 5 19 12"/>
+              </svg>
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROBUX PURCHASE SECTION -->
+    <div class="purchase-section">
+      <!-- Bonus Item -->
+      <div class="limited-items-section">
+  <div class="limited-header">
+    <h3>Limited-time avatar items</h3>
+    <span class="limited-timer">21 days left</span>
+  </div>
+  <div id="limitedCard" class="limited-card">
+    <div class="limited-top">
+      <img id="limitedImage" src="" alt="">
+      <div>
+        <div id="limitedName" class="limited-name"></div>
+        <div class="limited-creator">Roblox ✓</div>
+      </div>
+    </div>
+    <div class="limited-bottom">
+      <div class="limited-left">
+        <span id="limitedRobux" class="limited-robux"></span>
+        <span id="limitedOld" class="limited-old"></span>
+        <span id="limitedBonus" class="limited-bonus"></span>
+      </div>
+      <button id="limitedPrice" class="limited-price"></button>
+    </div>
+  </div>
+</div>
+
+
+      
+<div class="bonus-item-section">
+        <h3 class="section-title">Bonus item we picked for you</h3>
+        <div class="bonus-card" id="bonusBannerCard">
+          <!-- Background image fills the whole card -->
+          <img id="bonusBannerImg" class="bonus-bg-img" src="assets/banner.png" alt="" />
+          <!-- Content overlaid on top -->
+          <div class="bonus-overlay">
+            <div class="bonus-left">
+              <div class="bonus-icon">
+               <!-- <img src="assets/robux-icon.png" class="bonus-icon-img" alt="" onerror="this.style.display='none'" />
+                <span class="bonus-x2">x2</span>
+              </div>
+              <div class="bonus-info">
+                <div class="bonus-name">Steal a Brainrot <span class="info-icon">&#9432;</span></div>
+                <div class="bonus-sub">2x Money</div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+<!-- Main Robux Packages -->
+      <div class="packages-section">
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">24,000</span>
+            <span class="pkg-old">22,500</span>
+            <span class="pkg-bonus">+ 1500 more</span>
+          </div>
+          <button class="pkg-btn">£199.99</button>
+        </div>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">11,000</span>
+            <span class="pkg-old">10,000</span>
+            <span class="pkg-bonus">+ 1000 more</span>
+          </div>
+          <button class="pkg-btn">£99.99</button>
+        </div>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">5,250</span>
+            <span class="pkg-old">4,500</span>
+            <span class="pkg-bonus">+ 750 more</span>
+          </div>
+          <button class="pkg-btn">£49.99</button>
+        </div>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">3,625</span>
+            <span class="pkg-old">3,150</span>
+            <span class="pkg-bonus">+ 475 more</span>
+          </div>
+          <button class="pkg-btn">£29.99</button>
+        </div>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">2,000</span>
+            <span class="pkg-old">1,700</span>
+            <span class="pkg-bonus">+ 300 more</span>
+          </div>
+          <button class="pkg-btn">£19.99</button>
+        </div>
+      </div>
+
+      <!-- Robux Packages Section -->
+      <div class="packages-section">
+        <h3 class="section-title">Robux packages</h3>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">1,500</span>
+            <span class="pkg-old">1,200</span>
+            <span class="pkg-bonus">+ 300 more</span>
+          </div>
+          <button class="pkg-btn">£9.99</button>
+        </div>
+        <div class="pkg-row">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">1,000</span>
+            <span class="pkg-old">800</span>
+            <span class="pkg-bonus">+ 200 more</span>
+          </div>
+          <button class="pkg-btn">5.99</button>
+        </div>
+        <div class="pkg-row featured">
+          <div class="pkg-left">
+            <img src="assets/robux-icon.png" class="pkg-icon" alt="" onerror="this.style.display='none'" />
+            <span class="pkg-amount">500</span>
+            <span class="pkg-old">400</span>
+            <span class="pkg-bonus">+ 100 more</span>
+            <span class="pkg-tag">
+              <img src="assets/robux-icon.png" style="width:11px;height:11px;object-fit:contain;" alt="" onerror="this.style.display='none'" />
+              For you
+            </span>
+          </div>
+          <button class="pkg-btn featured-btn">£3.99</button>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq-section">
+        <h3 class="section-title">FAQ</h3>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <span>What are Robux?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="faq-answer">Robux is the virtual currency of Roblox. You can use Robux to buy avatar accessories, special abilities in games, and more.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <span>Where are my Robux?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="faq-answer">Your Robux balance is displayed in the top-right corner of the page. If you recently purchased, it may take a few minutes to reflect.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <span>Do Robux expire?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="faq-answer">No, Robux do not expire. Once purchased, they remain in your account indefinitely unless spent.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <span>How to redeem your gift card?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="faq-answer">Visit the gift card redemption page, enter your card PIN, and the Robux or membership will be applied to your account.</div>
+        </div>
+      </div>
+
+      <!-- Legal footer -->
+      <div class="legal-text">
+        When you buy Robux you receive only a limited, non-refundable, non-transferable, revocable license to use Robux, which has no value in real currency. By selecting the Premium subscription package, (1) you agree that you are over 18 and that you authorize us to charge your account every month until you cancel the subscription, and (2) you represent that you understand and agree to the Terms of Use, which includes an agreement to arbitrate any dispute between you and Roblox, and Privacy Policy. You can cancel at any time by clicking "Cancel subscription" on the billing tab of the setting page. If you cancel, you will still be charged for the current billing period. See <a href="#">Terms of Use</a> for other limitations.
+      </div>
+
+      <footer class="page-footer">
+        <a href="#">About Us</a>
+        <a href="#">Jobs</a>
+        <a href="#">Blog</a>
+        <a href="#">Parents</a>
+        <a href="#">Buy Gift Cards</a>
+        <a href="#">Help</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Privacy</a>
+        <a href="#">Your Privacy Choices</a>
+        <a href="#">Sitemap</a>
+      </footer>
+      <div class="footer-bottom">
+        <select class="lang-select">
+          <option>English (United States)</option>
+        </select>
+        <span>&#169;2026 Roblox Corporation. Roblox, the Roblox logo and Powering Imagination are among our registered and unregistered trademarks in the U.S. and other countries.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
