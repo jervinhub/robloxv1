@@ -1103,3 +1103,38 @@ flex-shrink:0;
 }
     flex-shrink:0;
 }
+
+
+/* FIXED LIMITED ROBUX ICON ALIGNMENT */
+.limited-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.limited-left .amount-robux-icon{
+    width:34px;
+    height:34px;
+    object-fit:contain;
+    flex-shrink:0;
+    margin-top:0;
+}
+
+.limited-robux{
+    display:flex;
+    align-items:center;
+    line-height:1;
+}
+
+.limited-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.limited-old,
+.limited-bonus{
+    display:flex;
+    align-items:center;
+    height:34px;
+}
