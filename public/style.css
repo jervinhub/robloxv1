@@ -1073,8 +1073,21 @@ flex-shrink:0;
 .limited-name{font-size:32px;font-weight:800}
 .limited-bottom{display:flex;justify-content:space-between;align-items:center;padding:20px;background:#34343a}
 .limited-robux{font-size:45px;font-weight:900}
-.limited-old{text-decoration:line-through;opacity:.6;margin-left:10px}
-.limited-bonus{background:#444;padding:5px 12px;border-radius:999px;margin-left:10px}
+.limited-old{
+    text-decoration:line-through;
+    opacity:.6;
+    margin-left:10px;
+    position:relative;
+    top:-6px;
+}
+.limited-bonus{
+    background:#444;
+    padding:5px 12px;
+    border-radius:999px;
+    margin-left:10px;
+    position:relative;
+    top:-6px;
+}
 .limited-price{background:#4b5563;color:#fff;padding:14px 42px;border-radius:12px;font-weight:700}
 
 /* resized limited items */
@@ -1082,7 +1095,13 @@ flex-shrink:0;
 .limited-top{padding:18px!important}
 .limited-top img{width:72px!important;height:72px!important}
 .limited-name{font-size:22px!important}
-.limited-robux{font-size:30px!important}
+.limited-robux{
+    font-size:30px!important;
+    font-weight:900;
+    position:relative;
+    top:-6px;
+    line-height:1;
+}
 .limited-bottom{padding:14px 18px!important}
 
 .limited-creator{
