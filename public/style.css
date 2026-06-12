@@ -1105,36 +1105,45 @@ flex-shrink:0;
 }
 
 
-/* FIXED LIMITED ROBUX ICON ALIGNMENT */
+/* PERFECT LIMITED ITEM PRICE ALIGNMENT */
 .limited-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
 }
 
 .limited-left .amount-robux-icon{
-    width:34px;
-    height:34px;
-    object-fit:contain;
-    flex-shrink:0;
-    margin-top:0;
+    width:34px !important;
+    height:34px !important;
+    display:block !important;
+    object-fit:contain !important;
+    margin:0 !important;
+    padding:0 !important;
+    flex-shrink:0 !important;
 }
 
 .limited-robux{
-    display:flex;
-    align-items:center;
-    line-height:1;
+    font-size:30px !important;
+    font-weight:900 !important;
+    line-height:1 !important;
+    display:flex !important;
+    align-items:center !important;
+}
+
+.limited-old{
+    display:flex !important;
+    align-items:center !important;
+    line-height:1 !important;
+}
+
+.limited-bonus{
+    display:flex !important;
+    align-items:center !important;
+    height:34px !important;
 }
 
 .limited-bottom{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.limited-old,
-.limited-bonus{
-    display:flex;
-    align-items:center;
-    height:34px;
+    display:flex !important;
+    justify-content:space-between !important;
+    align-items:center !important;
 }
