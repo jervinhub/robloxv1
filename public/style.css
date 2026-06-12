@@ -1107,43 +1107,41 @@ flex-shrink:0;
 
 /* PERFECT LIMITED ITEM PRICE ALIGNMENT */
 .limited-left{
-    display:flex !important;
-    align-items:center !important;
-    gap:10px !important;
+    display:flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:10px;
 }
 
 .limited-left .amount-robux-icon{
-    width:34px !important;
-    height:34px !important;
-    display:block !important;
-    object-fit:contain !important;
-    margin:0 !important;
-    padding:0 !important;
-    flex-shrink:0 !important;
+    width:30px;
+    height:30px;
+    min-width:30px;
+    display:block;
+    object-fit:contain;
+    margin:0;
+    padding:0;
+    flex-shrink:0;
 }
 
 .limited-robux{
-    font-size:30px !important;
-    font-weight:900 !important;
-    line-height:1 !important;
-    display:flex !important;
-    align-items:center !important;
+    font-size:30px;
+    font-weight:900;
+    line-height:1;
+    margin:0;
 }
 
 .limited-old{
-    display:flex !important;
-    align-items:center !important;
-    line-height:1 !important;
+    text-decoration:line-through;
+    opacity:.6;
+    margin-left:4px;
+    white-space:nowrap;
 }
 
 .limited-bonus{
-    display:flex !important;
-    align-items:center !important;
-    height:34px !important;
-}
-
-.limited-bottom{
-    display:flex !important;
-    justify-content:space-between !important;
-    align-items:center !important;
+    background:#444;
+    padding:5px 12px;
+    border-radius:999px;
+    white-space:nowrap;
+    margin-left:4px;
 }
